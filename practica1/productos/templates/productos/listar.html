@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Productos</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        header {
+            background-color: #1f1f1f;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.6);
+        }
+
+        h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 2.2rem;
+        }
+
+        main {
+            padding: 30px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .producto {
+            background-color: #1e1e1e;
+            border-left: 4px solid #888;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+            transition: 0.3s ease;
+        }
+
+        .producto.completado {
+            background-color: #222;
+            border-left: 6px solid limegreen;
+            opacity: 0.85;
+        }
+
+        .producto.completado h2,
+        .producto.completado p {
+            text-decoration: line-through;
+            color: #9ccc65;
+        }
+
+        .producto h2 {
+            margin-top: 0;
+            color: #ffffff;
+        }
+
+        .producto p {
+            margin: 5px 0;
+            color: #cfcfcf;
+        }
+
+        .acciones {
+            margin-top: 15px;
+        }
+
+        .acciones a {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .completar {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .completar:hover {
+            background-color: #45a049;
+        }
+
+        .eliminar {
+            background-color: #e53935;
+            color: white;
+        }
+
+        .eliminar:hover {
+            background-color: #c62828;
+        }
+
+        .editar {
+            background-color: #ffa726;
+            color: white;
+        }
+
+        .editar:hover {
+            background-color: #fb8c00;
+        }
+
+        .no-productos {
+            text-align: center;
+            color: #999;
+            font-size: 1.1rem;
+            margin-top: 50px;
+        }
+
+        footer {
+            background-color: #1a1a1a;
+            color: #777;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        .btn-agregar {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #3f51b5;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 20px auto;
+        }
+
+        .btn-agregar:hover {
+            background-color: #303f9f;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        {% if messages %}
+    <ul style="list-style: none; padding: 0; max-width: 800px; margin: 20px auto;">
+        {% for message in messages %}
+            <li style="background-color: #2e7d32; color: white; padding: 10px 20px; border-radius: 5px; margin-bottom: 10px;">
+                {{ message }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+        <h1>Lista de Productos</h1>
+    </header>
+
+    <div style="text-align: center;">
+        <a href="{% url 'agregar_producto' %}" class="btn-agregar">+ Agregar Producto</a>
+    </div>
+
+    <main>
+        {% if productos %}
+            {% for producto in productos %}
+                <div class="producto {% if producto.completado %}completado{% endif %}">
+                    <h2>{{ producto.nombre }}</h2>
+                    <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+                    <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+                    <div class="acciones">
+                        <a href="{% url 'marcar_completado' producto.id %}" class="completar">
+                            {% if producto.completado %}⟳ Desmarcar{% else %}✓ Marcar como completado{% endif %}
+                        </a>
+                        <a href="{% url 'editar_producto' producto.id %}" class="editar">✎ Editar</a>
+                        <a href="{% url 'eliminar_producto' producto.id %}" class="eliminar">✖ Eliminar</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-productos">No hay productos registrados.</p>
+        {% endif %}
+    </main>
+
+    <footer>
+        &copy; {{ year|default:"2025" }} Mi Tienda | Todos los derechos reservados
+    </footer>
+</body>
+</html>
